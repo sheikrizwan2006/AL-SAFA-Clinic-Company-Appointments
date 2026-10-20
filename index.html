@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AL SAFA SKIN AND HAIR CLINIC – Company Appointments</title>
+<style>
+:root{--navy:#0b2545;--teal:#13a89e;--soft:#e8f1fb;--bg:#f5f7fa;--card:#fff;--tx:#14213d;--mut:#5c6b80;--bd:#dde3ec;--bad:#c0392b;--ok:#13795b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--navy:#8fb4e8;--soft:#18283f;--bg:#0e1622;--card:#152133;--tx:#e8eef7;--mut:#9fb0c6;--bd:#27374d;--bad:#ff8c7a;--ok:#5fd4aa}}
+:root[data-theme="dark"]{--navy:#8fb4e8;--soft:#18283f;--bg:#0e1622;--card:#152133;--tx:#e8eef7;--mut:#9fb0c6;--bd:#27374d;--bad:#ff8c7a;--ok:#5fd4aa}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--navy);color:#fff;padding:18px 20px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) header{background:#0b1a2e;color:#e8eef7}}
+header .in,main{max-width:960px;margin:0 auto}
+header h1{margin:0;font-size:1.25rem;letter-spacing:.04em}header p{margin:2px 0 0;opacity:.85;font-size:.9rem}
+nav{display:flex;gap:8px;margin-top:12px}
+nav button{background:transparent;border:1px solid rgba(255,255,255,.4);color:inherit;padding:6px 14px;border-radius:20px;cursor:pointer;font:inherit;font-size:.9rem}
+nav button.on{background:var(--teal);border-color:var(--teal);color:#fff}
+main{padding:20px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:20px;margin-bottom:18px}
+h2{margin:0 0 8px;color:var(--navy);font-size:1.2rem}
+.hero{background:linear-gradient(135deg,var(--soft),var(--card));}
+label{display:block;font-weight:600;margin:12px 0 4px;font-size:.92rem}
+input,textarea,select{width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:9px;background:var(--card);color:var(--tx);font:inherit}
+textarea{min-height:90px}
+.btn{background:var(--teal);color:#fff;border:0;padding:11px 20px;border-radius:9px;font:inherit;font-weight:600;cursor:pointer;margin-top:14px}
+.btn.alt{background:var(--soft);color:var(--navy);border:1px solid var(--bd)}.btn:disabled{opacity:.5}
+.info{background:var(--soft);border-radius:10px;padding:12px 14px;margin-top:12px;font-size:.93rem}
+.err{color:var(--bad);font-size:.88rem;margin-top:4px}.ok{color:var(--ok)}
+.bar{height:10px;background:var(--bd);border-radius:6px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--teal)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:var(--soft);border-radius:10px;padding:10px;text-align:center}.stat b{display:block;font-size:1.4rem;color:var(--navy)}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.85rem}th,td{padding:7px 8px;border-bottom:1px solid var(--bd);text-align:left;vertical-align:top}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:130px}
+.tag{padding:2px 8px;border-radius:10px;background:var(--soft);font-size:.78rem}
+.hide{display:none}
+@media print{header,nav,.noprint{display:none!important}.card{border:0}}
+</style></head><body>
+<header><div class="in"><h1>AL SAFA SKIN AND HAIR CLINIC</h1><p>Company appointment portal</p>
+<nav><button id="n1" class="on">Book appointment</button><button id="n2">Manager</button></nav></div></header>
+<main>
+<section id="pub">
+<div class="card hero"><h2>Welcome, partner companies</h2><p>Book a visit to present your products, offers, discounts and schemes to the clinic. Appointments are on the <b>first and third Wednesday</b> of each month, reporting <b>10:00 AM–11:00 AM IST</b>, with 15 tokens per date.</p>
+<div class="info"><b>Eligibility:</b> company names starting A–H → first Wednesday. Names starting I–Z → third Wednesday. Your date is chosen automatically.</div></div>
+<div class="card" id="formcard"><h2>Book your appointment</h2>
+<label>Company Name *</label><input id="co" autocomplete="organization">
+<div id="dateinfo" class="info hide"></div>
+<label>Representative Name *</label><input id="rep">
+<label>Phone Number * (with country code)</label><input id="ph" type="tel" placeholder="+91 98765 43210">
+<label>Product Supplied *</label><input id="pr">
+<label>Offer Provided *</label><textarea id="of" placeholder="Discounts, promotional offers, schemes, benefits or special deals"></textarea>
+<div id="msg" class="err"></div>
+<button class="btn" id="go">Confirm booking</button></div>
+<div class="card hide" id="conf"></div>
+<div class="card"><h2>Contact</h2><p>AL SAFA SKIN AND HAIR CLINIC · WhatsApp +91 6381365992 · drsami25@gmail.com</p></div>
+</section>
+
+<section id="mgr" class="hide">
+<div id="lock" class="card"><h2>Manager access</h2><p>Only the clinic manager (the artifact owner or an editor signed in to claude.ai) can open the dashboard.</p></div>
+<div id="dash" class="hide">
+<div class="card"><h2>Overview</h2><div class="grid" id="stats"></div></div>
+<div class="card"><h2>Appointment calendar</h2><div class="scroll"><table id="cal"></table></div></div>
+<div class="card"><h2>Bookings</h2>
+<div class="row noprint"><input id="q" placeholder="Search company, rep or phone"><select id="fd"></select><select id="fs"><option value="">All statuses</option><option>Confirmed</option><option>Arrived</option><option>Completed</option><option>Absent</option><option>Cancelled</option></select></div>
+<div class="row noprint"><button class="btn alt" id="csv">Export CSV</button><button class="btn alt" onclick="print()">Print list</button></div>
+<div class="scroll"><table id="tb"></table></div></div>
+<div class="card noprint"><h2>Clinic priority hold</h2><p>Reserve a token on a date for clinic use. It counts against the 15-token limit and never overbooks.</p>
+<div class="row"><select id="hd"></select><button class="btn alt" id="hold">Hold next free token</button></div><div id="hmsg" class="info hide"></div></div>
+</div></section>
+</main>
+<script>
+const CAP=15,MGR={wa:"916381365992",em:"drsami25@gmail.com"},CL="AL SAFA SKIN AND HAIR CLINIC";
+const $=i=>document.getElementById(i),esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let db=null,user=null,downloads=null,all=[];
+const iso=(y,m,d)=>y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+function nowIST(){const p=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",hourCycle:"h23"}).formatToParts(new Date()).reduce((a,x)=>(a[x.type]=x.value,a),{});return{d:p.year+"-"+p.month+"-"+p.day,h:+p.hour}}
+function nthWed(y,m,n){const f=new Date(Date.UTC(y,m,1)).getUTCDay();return iso(y,m,1+((3-f+7)%7)+7*(n-1))}
+function group(name){const c=(name||"").trim().charAt(0).toUpperCase();if(!/^[A-Z]$/.test(c))return null;return c<="H"?1:3}
+function nextDate(g,skip=0){const t=nowIST();let y=+t.d.slice(0,4),m=+t.d.slice(5,7)-1,found=[];for(let i=0;i<14&&found.length<=skip;i++){const d=nthWed(y,m,g);if(d>t.d||(d===t.d&&t.h<11))found.push(d);m++;if(m>11){m=0;y++}}return found[skip]}
+function upcoming(){const t=nowIST();let y=+t.d.slice(0,4),m=+t.d.slice(5,7)-1,o=[];for(let i=0;i<6;i++){[1,3].forEach(n=>{const d=nthWed(y,m,n);if(d>=t.d)o.push(d)});m++;if(m>11){m=0;y++}}return o}
+const fmt=d=>new Date(d+"T00:00:00Z").toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"UTC"});
+async function used(date){if(!db)return null;try{const s=await db.collection("slots").where("date","==",date).get();const docs=s.docs||s;return docs.length}catch(e){return null}}
+async function showDate(){const g=group($("co").value),b=$("dateinfo");if(!$("co").value.trim()){b.classList.add("hide");return}
+ b.classList.remove("hide");if(!g){b.innerHTML='<span class="err">Company name must begin with a letter A–Z.</span>';return}
+ const d=nextDate(g),u=await used(d);const left=u==null?null:CAP-u;
+ b.innerHTML=`<b>Your eligible date:</b> ${fmt(d)} (${g==1?"first":"third"} Wednesday)<br>Report between <b>10:00 AM and 11:00 AM IST</b>.`+
+ (left==null?"<br>Availability will show once the database connects.":`<div class="bar"><i style="width:${u/CAP*100}%"></i></div>${u} booked · ${Math.max(left,0)} of ${CAP} tokens remaining${left<=0?' · <b class="err">Fully Booked</b>':""}`)}
+$("co").addEventListener("input",showDate);
+function waText(b){return `*New Company Appointment Booking – ${CL}*\nCompany: ${b.company}\nRepresentative: ${b.rep}\nPhone: ${b.phone}\nProduct Supplied: ${b.product}\nOffer Provided: ${b.offer}\nAppointment Date: ${fmt(b.date)}\nReporting Time: 10:00 AM–11:00 AM IST\nToken: ${b.token}\nReference: ${b.ref}\nStatus: Confirmed`}
+function mailLink(b){return "mailto:"+MGR.em+"?subject="+encodeURIComponent("New Company Appointment Booking – "+CL)+"&body="+encodeURIComponent("A new company appointment has been booked.\n\n"+waText(b).replace(/\*/g,"")+"\n\nPlease review the appointment details in the manager dashboard.")}
+const waLink=b=>"https://wa.me/"+MGR.wa+"?text="+encodeURIComponent(waText(b));
+async function book(){const m=$("msg");m.textContent="";
+ const v={company:$("co").value.trim(),rep:$("rep").value.trim(),phone:$("ph").value.trim(),product:$("pr").value.trim(),offer:$("of").value.trim()};
+ const g=group(v.company);
+ if(!g)return m.textContent="Please enter a valid company name beginning with a letter A–Z.";
+ if(!v.rep||!v.product||!v.offer)return m.textContent="All fields are required.";
+ if(!/^\+\d[\d\s-]{7,16}$/.test(v.phone))return m.textContent="Phone number must include a country code, e.g. +91 98765 43210.";
+ if(!db)return m.textContent="The booking database is not available right now. Please sign in to claude.ai and retry.";
+ $("go").disabled=true;
+ try{const date=nextDate(g),me=await user.id(),dup=await db.collection("bookings").where("company","==",v.company).where("date","==",date).get();
+  if((dup.docs||dup).some(x=>(x.data?x.data():x).status!=="Cancelled"))throw new Error("This company already has a booking on "+fmt(date)+".");
+  let token=0;const key=Math.random().toString(36).slice(2,8).toUpperCase();
+  for(let t=1;t<=CAP&&!token;t++){const ref=db.doc("slots/"+date+"_"+t),s=await ref.get();if(s.exists)continue;
+   await ref.set({date,token:t,claim:key,at:Date.now()});const chk=await ref.get();if((chk.data?chk.data():chk).claim===key)token=t}
+  if(!token)throw new Error("Fully Booked: all 15 tokens for "+fmt(date)+" are taken.");
+  const ref="ASC-"+date.replace(/-/g,"")+"-"+String(token).padStart(2,"0")+"-"+key;
+  const b={...v,date,token,ref,status:"Confirmed",owner:me,created:Date.now(),waStatus:"Not sent – automatic WhatsApp not configured",emStatus:"Not sent – automatic email not configured",log:[{t:Date.now(),e:"Created"}]};
+  await db.doc("bookings/"+ref).set(b);showConf(b);
+ }catch(e){m.textContent=e.message||"Booking failed. Please try again."}finally{$("go").disabled=false;showDate()}}
+function showConf(b){$("formcard").classList.add("hide");const c=$("conf");c.classList.remove("hide");
+ c.innerHTML=`<h2 class="ok">Booking confirmed</h2><div id="slip"><h3>${CL}</h3><table>${[["Company Name",b.company],["Representative Name",b.rep],["Phone Number",b.phone],["Product Supplied",b.product],["Offer Provided",b.offer],["Appointment Date",fmt(b.date)],["Reporting Time","10:00 AM–11:00 AM IST"],["Token Number",b.token],["Booking Reference",b.ref],["Booking Status","Confirmed"]].map(r=>`<tr><th>${r[0]}</th><td>${esc(r[1])}</td></tr>`).join("")}</table></div>
+ <div class="info noprint">Automatic WhatsApp/email delivery to the manager is <b>not configured</b> in this version, so nothing has been auto-sent. Use the buttons below to notify the clinic manager yourself.</div>
+ <div class="row noprint"><button class="btn" onclick="print()">Print / Save as PDF</button><a class="btn alt" style="text-align:center;text-decoration:none" target="_blank" rel="noopener" href="${waLink(b)}" onclick="mark('${b.ref}','wa')">Open in WhatsApp</a><a class="btn alt" style="text-align:center;text-decoration:none" href="${mailLink(b)}" onclick="mark('${b.ref}','em')">Open email draft</a></div>`}
+async function mark(ref,k){try{await db.doc("bookings/"+ref).update(k==="wa"?{waStatus:"Opened in WhatsApp (not auto-sent) "+new Date().toLocaleString("en-IN",{timeZone:"Asia/Kolkata"})}:{emStatus:"Email draft opened (not auto-sent) "+new Date().toLocaleString("en-IN",{timeZone:"Asia/Kolkata"})})}catch(e){}}
+$("go").onclick=book;
+// manager
+async function loadMgr(){if(!db||!(user&&user.canEdit())){return}
+ $("lock").classList.add("hide");$("dash").classList.remove("hide");
+ db.collection("bookings").onSnapshot(s=>{all=(s.docs||s).map(d=>d.data?d.data():d).sort((a,b)=>a.date.localeCompare(b.date)||a.token-b.token);render()});}
+function render(){const up=upcoming(),cnt=s=>all.filter(b=>b.status===s).length,act=all.filter(b=>b.status!=="Cancelled").length;
+ $("stats").innerHTML=[["Total",all.length],["Confirmed",cnt("Confirmed")],["Arrived",cnt("Arrived")],["Completed",cnt("Completed")],["Absent",cnt("Absent")],["Cancelled",cnt("Cancelled")],["Tokens booked",act],["Tokens remaining (upcoming)",up.reduce((a,d)=>a+CAP-all.filter(b=>b.date===d&&b.status!=="Cancelled").length,0)]].map(x=>`<div class="stat"><b>${x[1]}</b>${x[0]}</div>`).join("");
+ $("cal").innerHTML="<tr><th>Date</th><th>Group</th><th>Booked</th><th>Remaining</th></tr>"+up.map(d=>{const n=all.filter(b=>b.date===d&&b.status!=="Cancelled").length,third=new Date(d+"T00:00:00Z").getUTCDate()>14;return`<tr><td>${fmt(d)}</td><td>${third?"I–Z (third)":"A–H (first)"}</td><td>${n}</td><td>${n>=CAP?"Fully Booked":CAP-n}</td></tr>`}).join("");
+ const dates=[...new Set([...up,...all.map(b=>b.date)])].sort(),cur=$("fd").value;
+ $("fd").innerHTML='<option value="">All dates</option>'+dates.map(d=>`<option value="${d}">${d}</option>`).join("");$("fd").value=cur;
+ $("hd").innerHTML=up.map(d=>`<option value="${d}">${d}</option>`).join("");
+ const q=$("q").value.toLowerCase(),rows=all.filter(b=>(!$("fd").value||b.date===$("fd").value)&&(!$("fs").value||b.status===$("fs").value)&&(!q||(b.company+b.rep+b.phone).toLowerCase().includes(q)));
+ $("tb").innerHTML="<tr><th>Date/Token</th><th>Company</th><th>Rep / Phone</th><th>Product / Offer</th><th>Status</th><th>Notifications</th><th class='noprint'>Actions</th></tr>"+rows.map(b=>`<tr><td>${b.date}<br>#${b.token}<br><small>${esc(b.ref)}</small></td><td>${esc(b.company)}</td><td>${esc(b.rep)}<br>${esc(b.phone)}</td><td>${esc(b.product)}<br><small>${esc(b.offer)}</small></td><td><span class="tag">${b.status}</span></td><td><small>WA: ${esc(b.waStatus)}<br>Email: ${esc(b.emStatus)}</small></td><td class="noprint">${["Arrived","Completed","Absent"].map(s=>`<button class="btn alt" style="margin:2px;padding:4px 8px" onclick="setS('${b.ref}','${s}')">${s}</button>`).join("")}<button class="btn alt" style="margin:2px;padding:4px 8px" onclick="edit('${b.ref}')">Edit</button><button class="btn alt" style="margin:2px;padding:4px 8px" onclick="cancel('${b.ref}')">Cancel</button><a href="${waLink(b)}" target="_blank" rel="noopener" onclick="mark('${b.ref}','wa')">Resend WA</a> · <a href="${mailLink(b)}" onclick="mark('${b.ref}','em')">Resend email</a></td></tr>`).join("")}
+["q","fd","fs"].forEach(i=>$(i).addEventListener("input",render));
+async function setS(ref,s){const b=all.find(x=>x.ref===ref);await db.doc("bookings/"+ref).update({status:s,log:[...(b.log||[]),{t:Date.now(),e:"Status → "+s}]})}
+async function cancel(ref){if(!confirm("Cancel this appointment and free its token?"))return;const b=all.find(x=>x.ref===ref);await db.doc("bookings/"+ref).update({status:"Cancelled",log:[...(b.log||[]),{t:Date.now(),e:"Cancelled"}]});await db.doc("slots/"+b.date+"_"+b.token).delete()}
+async function edit(ref){const b=all.find(x=>x.ref===ref),o=prompt("Edit Offer Provided",b.offer);if(o==null||!o.trim())return;await db.doc("bookings/"+ref).update({offer:o.trim(),log:[...(b.log||[]),{t:Date.now(),e:"Offer edited"}]})}
+$("hold").onclick=async()=>{const d=$("hd").value,h=$("hmsg");h.classList.remove("hide");
+ for(let t=1;t<=CAP;t++){const r=db.doc("slots/"+d+"_"+t);if(!(await r.get()).exists){await r.set({date:d,token:t,claim:"CLINIC",at:Date.now()});h.textContent="Token "+t+" on "+d+" held for the clinic.";return}}
+ h.textContent="No free token: date is already fully allocated."};
+$("csv").onclick=async()=>{const H=["date","token","ref","company","rep","phone","product","offer","status","waStatus","emStatus"],csv=[H.join(",")].concat(all.map(b=>H.map(k=>'"'+String(b[k]??"").replace(/"/g,'""')+'"').join(","))).join("\n");
+ if(downloads)try{await downloads.save({filename:"alsafa-bookings.csv",data:csv})}catch(e){}};
+function tab(m){$("pub").classList.toggle("hide",m);$("mgr").classList.toggle("hide",!m);$("n1").classList.toggle("on",!m);$("n2").classList.toggle("on",m)}
+$("n1").onclick=()=>tab(0);$("n2").onclick=()=>tab(1);
+(async()=>{try{db=await claude.use("db");user=await claude.use("user");downloads=await claude.use("downloads")}catch(e){}
+ loadMgr();showDate()})();
+</script></body></html>
