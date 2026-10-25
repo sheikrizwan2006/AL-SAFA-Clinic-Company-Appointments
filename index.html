@@ -83,13 +83,17 @@ async function call(p){const r=await fetch(API,{method:"POST",headers:{"Content-
 async function info(g){const r=await fetch(API+"?g="+g);return r.json()}
 const configured=()=>API.startsWith("https://");
 let tmr;
+const bw=d=>({open:Date.parse(d+"T09:00:00+05:30")-864e5,close:Date.parse(d+"T11:00:00+05:30")});
+const fdt=ms=>new Date(ms).toLocaleString("en-IN",{timeZone:"Asia/Kolkata",weekday:"long",day:"numeric",month:"long",hour:"numeric",minute:"2-digit",hour12:true})+" IST";
+const wstate=(i)=>{const W=bw(i.date),n=Date.now();return i.cap-i.used<=0?"full":n<W.open?"soon":n>=W.close?"closed":"open"};
+setInterval(()=>{if($("co").value.trim())showDate()},60000);
 function showDate(){clearTimeout(tmr);tmr=setTimeout(async()=>{const g=group($("co").value),b=$("dateinfo");
  if(!$("co").value.trim()){b.classList.add("hide");return}
  b.classList.remove("hide");if(!g){b.innerHTML='<span class="err">Company name must begin with a letter A–Z.</span>';return}
  let i=null;if(configured())try{i=await info(g)}catch(e){}
  if(!i||!i.ok){b.innerHTML="<b>Your eligible date:</b> "+(g==1?"first":"third")+" Wednesday of the month<br>Availability will show once connected.";return}
- const left=i.cap-i.used;
- b.innerHTML=`<b>Your eligible date:</b> ${fmt(i.date)} (${g==1?"first":"third"} Wednesday)<br>Report between <b>10:00 AM and 11:00 AM IST</b>.<div class="bar"><i style="width:${i.used/i.cap*100}%"></i></div>${i.used} booked · ${Math.max(left,0)} of ${i.cap} tokens remaining${left<=0?' · <b class="err">Fully Booked</b>':""}`},300)}
+ const left=i.cap-i.used,W=bw(i.date),st=wstate(i);
+ b.innerHTML=`<b>Your eligible date:</b> ${fmt(i.date)} (${g==1?"first":"third"} Wednesday)<br>Report between <b>10:00 AM and 11:00 AM IST</b>.<div class="bar"><i style="width:${i.used/i.cap*100}%"></i></div>${i.used} booked · ${Math.max(left,0)} of ${i.cap} tokens remaining${left<=0?' · <b class="err">Fully Booked</b>':""}<br><b>Booking window:</b> opens ${fdt(W.open)}; closes automatically once all ${i.cap} tokens are booked (or at ${fdt(W.close)}).<br>`+(st=="open"?'<b class="ok">Booking is OPEN now.</b>':st=="soon"?'<b class="err">Booking is not open yet. It opens on '+fdt(W.open)+'.</b>':st=="full"?'<b class="err">Booking closed: all tokens are taken.</b>':'<b class="err">Booking closed for this date.</b>');$("go").disabled=st!="open"},300)}
 $("co").addEventListener("input",showDate);
 function waText(b){return `*New Company Appointment Booking – ${CL}*\nCompany: ${b.company}\nRepresentative: ${b.rep}\nPhone: ${b.phone}\nProduct Supplied: ${b.product}\nOffer Provided: ${b.offer}\nAppointment Date: ${fmt(b.date)}\nReporting Time: 10:00 AM–11:00 AM IST\nToken: ${b.token}\nReference: ${b.ref}\nStatus: ${b.status||"Confirmed"}`}
 const waLink=b=>"https://wa.me/"+MGR.wa+"?text="+encodeURIComponent(waText(b));
@@ -99,6 +103,12 @@ async function book(){const m=$("msg");m.textContent="";
  if(!v.rep||!v.product||!v.offer)return m.textContent="All fields are required.";
  if(!/^\+\d[\d\s-]{7,16}$/.test(v.phone))return m.textContent="Phone number must include a country code, e.g. +91 98765 43210.";
  if(!configured())return m.textContent="Booking is not connected yet. The website owner must add the Google Apps Script URL.";
+ let ci;try{ci=await info(group(v.company))}catch(e){}
+ if(!ci||!ci.ok)return m.textContent="Could not check the booking window. Please try again.";
+ const cs=wstate(ci);
+ if(cs=="soon")return m.textContent="Booking for "+fmt(ci.date)+" opens on "+fdt(bw(ci.date).open)+".";
+ if(cs=="full")return m.textContent="Booking closed: all "+ci.cap+" tokens for "+fmt(ci.date)+" are taken.";
+ if(cs=="closed")return m.textContent="Booking for this date is closed.";
  $("go").disabled=true;$("go").textContent="Booking…";
  try{const r=await call({action:"book",...v});if(!r.ok)throw new Error(r.error||"Booking failed.");showConf(r.booking)}
  catch(e){m.textContent=(e&&e.message&&e.message!=="Failed to fetch")?e.message:"Could not reach the booking server. Please check your internet and try again."}
