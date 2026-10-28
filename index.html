@@ -135,12 +135,21 @@ function render(){const act=all.filter(b=>b.status!=="Cancelled").length,cnt=s=>
  $("fd").innerHTML='<option value="">All dates</option>'+dates.map(d=>`<option value="${d}">${d}</option>`).join("");$("fd").value=cur;
  const hcur=$("hd").value;$("hd").innerHTML=up.map(d=>`<option value="${d}">${d}</option>`).join("");if(hcur)$("hd").value=hcur;
  const q=$("q").value.toLowerCase(),rows=all.filter(b=>(!$("fd").value||b.date===$("fd").value)&&(!$("fs").value||b.status===$("fs").value)&&(!q||(b.company+b.rep+b.phone).toLowerCase().includes(q)));
- $("tb").innerHTML="<tr><th>Date/Token</th><th>Company</th><th>Rep / Phone</th><th>Product / Offer</th><th>Status</th><th>Email</th><th class='noprint'>Actions</th></tr>"+rows.map(b=>`<tr><td>${esc(b.date)}<br>#${b.token}<br><small>${esc(b.ref)}</small></td><td>${esc(b.company)}</td><td>${esc(b.rep)}<br>${esc(b.phone)}</td><td>${esc(b.product)}<br><small>${esc(b.offer)}</small></td><td><span class="tag">${esc(b.status)}</span></td><td><small>${esc(b.email)}</small></td><td class="noprint">${["Arrived","Completed","Absent"].map(s=>`<button class="btn alt" style="margin:2px;padding:4px 8px" onclick="setS('${esc(b.ref)}','${s}')">${s}</button>`).join("")}<button class="btn alt" style="margin:2px;padding:4px 8px" onclick="edit('${esc(b.ref)}')">Edit offer</button><button class="btn alt" style="margin:2px;padding:4px 8px" onclick="cancel('${esc(b.ref)}')">Cancel</button><a href="${waLink(b)}" target="_blank" rel="noopener">WhatsApp</a></td></tr>`).join("")}
+ $("tb").innerHTML="<tr><th>Date/Token</th><th>Company</th><th>Rep / Phone</th><th>Product / Offer</th><th>Status</th><th>Email</th><th class='noprint'>Actions</th></tr>"+rows.map(b=>`<tr><td>${esc(b.date)}<br>#${b.token}<br><small>${esc(b.ref)}</small></td><td>${esc(b.company)}</td><td>${esc(b.rep)}<br>${esc(b.phone)}</td><td>${esc(b.product)}<br><small>${esc(b.offer)}</small></td><td><span class="tag">${esc(b.status)}</span></td><td><small>${esc(b.email)}</small></td><td class="noprint">${["Arrived","Completed","Absent"].map(s=>`<button class="btn alt" style="margin:2px;padding:4px 8px" onclick="setS('${esc(b.ref)}','${s}')">${s}</button>`).join("")}<button class="btn alt" style="margin:2px;padding:4px 8px" onclick="cancel('${esc(b.ref)}')">Cancel</button><a href="${waLink(b)}" target="_blank" rel="noopener">WhatsApp</a></td></tr>`).join("")}
 ["q","fd","fs"].forEach(i=>$(i).addEventListener("input",render));
 async function act(p){const r=await call({key,...p});if(!r.ok){alert(r.error||"Action failed");return false}await refresh();return true}
 const setS=(ref,s)=>act({action:"status",ref,value:s});
-const cancel=ref=>{if(confirm("Cancel this appointment and free its token?"))act({action:"status",ref,value:"Cancelled"})};
-function edit(ref){const b=all.find(x=>x.ref===ref),o=prompt("Edit Offer Provided",b.offer);if(o&&o.trim())act({action:"offer",ref,value:o.trim()})}
+function say(msg,yes){return new Promise(res=>{const o=document.createElement("div");o.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px";
+ o.innerHTML='<div style="background:var(--card,#fff);color:var(--tx,#14213d);border:1px solid var(--bd,#ccc);border-radius:14px;padding:20px;max-width:420px;width:100%"><p style="margin:0 0 14px"></p><div style="display:flex;gap:8px;justify-content:flex-end"></div></div>';
+ o.querySelector("p").textContent=msg;const bx=o.querySelector("div div"),mk=(t,v)=>{const x=document.createElement("button");x.className="btn alt";x.textContent=t;x.style.margin="0";x.onclick=()=>{o.remove();res(v)};bx.appendChild(x)};
+ if(yes){mk("No, keep it",false);mk("Yes, cancel it",true)}else mk("OK",true);document.body.appendChild(o)})}
+async function cancel(ref){if(!(await say("Cancel this appointment and free its token?",true)))return;
+ let r=null;try{r=await call({key,action:"cancel",ref})}catch(e){}
+ if(!r||!r.ok){try{r=await call({key,action:"status",ref,value:"Cancelled"})}catch(e){r={ok:false,error:e.message}}}
+ if(!r.ok){await say(r.error||"Cancel failed. Please try again.");return}
+ try{await refresh()}catch(e){}
+ const b=all.find(x=>x.ref===ref);
+ if(b&&b.status!=="Cancelled")await say("The server did not cancel this booking. Your Google Apps Script needs to accept the status \"Cancelled\" and free the token.")}
 $("hold").onclick=async()=>{const h=$("hmsg");h.classList.remove("hide");h.textContent="Working…";
  const r=await call({action:"hold",key,date:$("hd").value});
  if(r.ok){h.textContent="Token "+r.token+" on "+$("hd").value+" held for the clinic.";refresh()}else h.textContent=r.error};
